@@ -51,7 +51,7 @@ public class R2dbcPostgreSQLConfig {
 
         final ConnectionPoolConfiguration configuration = ConnectionPoolConfiguration.builder(connectionFactory)
                 .initialSize(0)
-                .maxSize(20)
+                .maxSize(2)
                 .maxIdleTime(Duration.ofMillis(2500))
                 .maxCreateConnectionTime(Duration.ofSeconds(10))
                 .acquireRetry(3)
