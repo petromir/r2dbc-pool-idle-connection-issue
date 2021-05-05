@@ -24,7 +24,7 @@ PGPASSWORD=password psql -U root -h localhost -p 5430 -d books -f ./src/main/res
 ```
 2. Run Spring Boot application
 ```shell
-java -jar ./target/r2dbc-pool-idle-connection-issue-0.0.1-SNAPSHOT.jar
+DB_PORT=5430 java -jar ./target/r2dbc-pool-idle-connection-issue-0.0.1-SNAPSHOT.jar
 ```
 3. Run `jconsole` to observe JMX metrics
 4. Watch db connection in PostgreSQL

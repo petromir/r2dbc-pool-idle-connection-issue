@@ -24,9 +24,17 @@ public class BooksController {
     public Mono<Void> generateBooks() {
         log.info("Creating books...");
         return Flux.fromIterable(Stream.generate(() -> new BookEntity(UUID.randomUUID().toString(), UUID.randomUUID().toString()))
-                .limit(100).collect(Collectors.toList()))
+                .limit(5000).collect(Collectors.toList()))
                 .flatMap(bookRepository::save)
                 .doOnComplete(() -> log.info("Books generated"))
+                .then();
+    }
+
+    @PostMapping("/single")
+    public Mono<Void> generateBook() {
+        log.info("Creating books...");
+        return bookRepository.save(new BookEntity(UUID.randomUUID().toString(), UUID.randomUUID().toString()))
+                .doOnSuccess(bookEntity -> log.info("Books saved: {}", bookEntity))
                 .then();
     }
 }

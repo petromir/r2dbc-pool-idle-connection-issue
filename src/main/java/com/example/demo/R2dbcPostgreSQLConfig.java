@@ -7,6 +7,7 @@ import io.r2dbc.spi.ConnectionFactory;
 import io.r2dbc.spi.ConnectionFactoryOptions;
 import io.r2dbc.spi.Option;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.r2dbc.connectionfactory.R2dbcTransactionManager;
@@ -36,12 +37,15 @@ import static io.r2dbc.spi.ConnectionFactoryOptions.USER;
 @RequiredArgsConstructor
 public class R2dbcPostgreSQLConfig {
 
+    @Value("${db.port}")
+    private Integer port;
+
     @Bean
     public ConnectionFactory connectionFactory() {
         final ConnectionFactory connectionFactory = ConnectionFactories.get(ConnectionFactoryOptions.builder()
                 .option(DRIVER, "pool")
                 .option(PROTOCOL, "postgresql")
-                .option(PORT, 5430)
+                .option(PORT, port)
                 .option(HOST, "localhost")
                 .option(USER, "root")
                 .option(PASSWORD, "password")
@@ -51,7 +55,7 @@ public class R2dbcPostgreSQLConfig {
 
         final ConnectionPoolConfiguration configuration = ConnectionPoolConfiguration.builder(connectionFactory)
                 .initialSize(0)
-                .maxSize(2)
+                .maxSize(20)
                 .maxIdleTime(Duration.ofMillis(2500))
                 .maxCreateConnectionTime(Duration.ofSeconds(10))
                 .acquireRetry(3)
