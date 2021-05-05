@@ -29,8 +29,8 @@ DB_PORT=5430 java -jar ./target/r2dbc-pool-idle-connection-issue-0.0.1-SNAPSHOT.
 3. Run `jconsole` to observe JMX metrics
 4. Watch db connection in PostgreSQL
 ```shell
-watch --differences=permanent 'PGPASSWORD=password psql -U root -h 127.0.0.1 -p 5430 -d books -c "select * from (select count(*) active_conn FROM pg_stat_activity where datname = '\''books'\'' and application_name='\''r2dbc-postgresql'\'' and pid<>pg_backend_pid() and state = '\''active'\'') q1, (select count(*) idle_conn FROM pg_stat_activity where datname = '\''books'\'' and application_name='\''r2dbc-postgresql'\'' and pid<>pg_backend_pid() and state = '\''idle'\'') q2"'
-```   
+watch --differences=permanent 'PGPASSWORD=password psql -U root -h 127.0.0.1 -p 5430 -d books -c "select state, count(pid) FROM pg_stat_activity where datname = '\''books'\'' and pid<>pg_backend_pid() and application_name = '\''r2dbc-postgresql'\'' group by state"'
+```
 5. Perform `POST` request to generate some usage of database connections.
 ```shell
 curl -X POST 'http://localhost:8080/books'
