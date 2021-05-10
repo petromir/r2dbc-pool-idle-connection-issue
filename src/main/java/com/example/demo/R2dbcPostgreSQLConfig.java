@@ -28,7 +28,6 @@ import static io.r2dbc.spi.ConnectionFactoryOptions.DRIVER;
 import static io.r2dbc.spi.ConnectionFactoryOptions.HOST;
 import static io.r2dbc.spi.ConnectionFactoryOptions.PASSWORD;
 import static io.r2dbc.spi.ConnectionFactoryOptions.PORT;
-import static io.r2dbc.spi.ConnectionFactoryOptions.PROTOCOL;
 import static io.r2dbc.spi.ConnectionFactoryOptions.USER;
 
 @Configuration
@@ -43,8 +42,7 @@ public class R2dbcPostgreSQLConfig {
     @Bean
     public ConnectionFactory connectionFactory() {
         final ConnectionFactory connectionFactory = ConnectionFactories.get(ConnectionFactoryOptions.builder()
-                .option(DRIVER, "pool")
-                .option(PROTOCOL, "postgresql")
+                .option(DRIVER, "postgresql")
                 .option(PORT, port)
                 .option(HOST, "localhost")
                 .option(USER, "root")
@@ -53,10 +51,20 @@ public class R2dbcPostgreSQLConfig {
                 .option(Option.valueOf("preparedStatementCacheQueries"), 0)
                 .build());
 
+//        TRY THIS!
+//        final ConnectionFactory connectionFactory = new PostgresqlConnectionFactory(PostgresqlConnectionConfiguration.builder()
+//                .host("localhost")
+//                .port(port)
+//                .username("root")
+//                .password("password")
+//                .database("books")
+//                .preparedStatementCacheQueries(0)
+//                .build());
+
         final ConnectionPoolConfiguration configuration = ConnectionPoolConfiguration.builder(connectionFactory)
                 .initialSize(0)
                 .maxSize(20)
-                .maxIdleTime(Duration.ofMillis(2500))
+                .maxIdleTime(Duration.ofMillis(2500), Duration.ofMillis(5000))
                 .maxCreateConnectionTime(Duration.ofSeconds(10))
                 .acquireRetry(3)
                 .maxAcquireTime(Duration.ofSeconds(7))
